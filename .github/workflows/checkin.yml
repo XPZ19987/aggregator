@@ -1,9 +1,9 @@
 name: Update Aggregator Subscriptions
 
 on:
-  workflow_dispatch: # 支持手动运行
+  workflow_dispatch:
   schedule:
-    - cron: '0 0,12 * * *' # 每天北京时间 8:00 和 20:00 自动运行
+    - cron: '0 0,12 * * *'
 
 jobs:
   build:
@@ -23,11 +23,10 @@ jobs:
 
       - name: Run Aggregator
         run: |
-          # 核心修正：使用 -g (Gist ID) 和 -k (Token) 触发上传
-          # 使用 -o clash.yaml 固定生成的文件名
+          # 核心修正：去掉 -o 后面的文件名，只保留参数本身
           python subscribe/collect.py \
             -t clash \
             -n 300 \
-            -o clash.yaml \
+            -o \
             -g "${{ secrets.GIST_ID }}" \
             -k "${{ secrets.GIST_PAT }}"
