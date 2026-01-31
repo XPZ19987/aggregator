@@ -1,9 +1,9 @@
 name: Update Aggregator Subscriptions
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # 支持手动运行
   schedule:
-    - cron: '0 0,12 * * *'
+    - cron: '0 0,12 * * *' # 每天北京时间 8点和20点自动运行
 
 jobs:
   build:
@@ -26,10 +26,13 @@ jobs:
           GIST_ID: ${{ secrets.GIST_ID }}
           GIST_PAT: ${{ secrets.GIST_PAT }}
         run: |
-          # 确认：使用 subscribe/collect.py 而不是 main.py
+          # 修正后的命令：使用 collect.py 且只使用它支持的参数
+          # -t: 格式(clash)
+          # -n: 数量(300)
+          # -g: Gist ID
+          # -k: GitHub Token
           python subscribe/collect.py \
-            --include "SG|JP|US|新加坡|日本|美国" \
-            --exclude "过期|流量|官网|网站|群|注册" \
-            --max-num 300 \
-            --out clash.yaml \
-            --upload-gist true
+            -t clash \
+            -n 300 \
+            -g ${{ secrets.GIST_ID }} \
+            -k ${{ secrets.GIST_PAT }}
