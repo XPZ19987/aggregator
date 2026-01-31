@@ -23,7 +23,8 @@ jobs:
 
       - name: Run Aggregator
         run: |
-          # 核心修正：去掉 -o 后面的文件名，只保留参数本身
+          # 核心修正：-o 是独立开关，后面不接文件名
+          # -g 和 -k 必须精准对应你的 Secret 名字
           python subscribe/collect.py \
             -t clash \
             -n 300 \
