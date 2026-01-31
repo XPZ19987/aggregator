@@ -26,22 +26,10 @@ jobs:
           GIST_ID: ${{ secrets.GIST_ID }}
           GIST_PAT: ${{ secrets.GIST_PAT }}
         run: |
-          # 修改了 --include 参数，保留新加坡、日本、美国
-          - name: Run Aggregator
-        env:
-          GIST_ID: ${{ secrets.GIST_ID }}
-          GIST_PAT: ${{ secrets.GIST_PAT }}
-        run: |
-          # 将这里的 main.py 改为 subscribe/collect.py
+          # 这一行是成功的关键！必须指向 subscribe/collect.py
           python subscribe/collect.py \
             --include "SG|JP|US|新加坡|日本|美国" \
             --exclude "过期|流量|官网|网站|群|注册" \
             --max-num 300 \
-            --out clash.yaml \
-            --upload-gist true
-            --include "SG|JP|US|新加坡|日本|美国" \
-            --exclude "过期|流量|官网|网站|群|注册" \
-            --max-num 300 \
-            --timeout 5000 \
             --out clash.yaml \
             --upload-gist true
