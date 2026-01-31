@@ -1,9 +1,9 @@
 name: Update Aggregator Subscriptions
 
 on:
-  workflow_dispatch: # 支持手动运行
+  workflow_dispatch:
   schedule:
-    - cron: '0 0,12 * * *' # 每天北京时间 8点和20点自动运行
+    - cron: '0 0,12 * * *'
 
 jobs:
   build:
@@ -23,16 +23,13 @@ jobs:
 
       - name: Run Aggregator
         env:
-          GIST_ID: ${{ secrets.GIST_ID }}
-          GIST_PAT: ${{ secrets.GIST_PAT }}
+          MY_GIST_ID: ${{ secrets.GIST_ID }}
+          MY_GIST_PAT: ${{ secrets.secrets.GIST_PAT }}
         run: |
-          # 修正后的命令：使用 collect.py 且只使用它支持的参数
-          # -t: 格式(clash)
-          # -n: 数量(300)
-          # -g: Gist ID
-          # -k: GitHub Token
+          # 使用修正后的变量引用和参数
           python subscribe/collect.py \
             -t clash \
             -n 300 \
-            -g ${{ secrets.GIST_ID }} \
-            -k ${{ secrets.GIST_PAT }}
+            -g "${{ secrets.GIST_ID }}" \
+            -k "${{ secrets.GIST_PAT }}" \
+            -o clash.yaml
