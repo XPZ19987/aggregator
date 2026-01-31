@@ -1,4 +1,3 @@
 https://raw.githubusercontent.com/freefq/free/master/v2
 https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub
 https://raw.githubusercontent.com/vpei/free/master/v2ray
-https://raw.githubusercontent.com/anaer/Sub/main/clash.yaml
