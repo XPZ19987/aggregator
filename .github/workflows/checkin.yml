@@ -21,23 +21,31 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run Aggregator
-        env:
-          # 只保留 PAT 变量，因为它是秘密
-          PAT: ${{ secrets.GIST_PAT }}
+      - name: Generate Nodes Only
+        # 这里的 -o 参数告诉脚本：只生成文件，不要上传！(绕过 404 Bug)
         run: |
-          # 1. 自检: 确保密码已读取
-          if [ -z "$PAT" ]; then
-            echo "❌ 错误: GIST_PAT 没读到！"
-            exit 1
-          else
-            echo "✅ 成功: GIST_PAT 已读取"
-          fi
+          python subscribe/collect.py -t clash -n 300 -o
 
-          # 2. 运行脚本 
-          # 重点修正：直接把链接粘贴在这里，不使用变量，防止任何格式错误！
-          python subscribe/collect.py \
-            -t clash \
-            -n 300 \
-            -g "https://gist.github.com/XPZ19987/c281adea33043e62dbfd1384485b6bc9" \
-            -k "$PAT"
+      - name: Upload to Gist (Manual Mode)
+        env:
+          # 读取你的 Token
+          TOKEN: ${{ secrets.GIST_PAT }}
+          # 我已经帮你填好了你截图里那个正确的 Gist ID
+          GIST_ID: "c281adea33043e62dbfd1384485b6bc9"
+        run: |
+          # 1. 设置账号身份
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          # 2. 拉取你的 Gist 仓库 (使用 Token 认证)
+          git clone https://x-access-token:$TOKEN@gist.github.com/$GIST_ID.git gist_repo
+          
+          # 3. 把生成的节点文件复制进去
+          # 注意：脚本生成的文件在 data/clash.yaml
+          cp data/clash.yaml gist_repo/clash.yaml
+          
+          # 4. 提交并推送
+          cd gist_repo
+          git add clash.yaml
+          git commit -m "Auto update by Github Actions" || echo "没有新节点，跳过更新"
+          git push
