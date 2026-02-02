@@ -23,11 +23,10 @@ jobs:
 
       - name: Run Aggregator
         run: |
-          # 核心修正：-o 是独立开关，后面不接文件名
-          # -g 和 -k 必须精准对应你的 Secret 名字
+          # 最终修正版：直接调用环境变量，去掉冗余参数
           python subscribe/collect.py \
             -t clash \
             -n 300 \
             -o \
-            -g "${{ secrets.GIST_ID }}" \
+            -g "d1eae861da1ff1fb632e4fa08e2f06b3" \
             -k "${{ secrets.GIST_PAT }}"
