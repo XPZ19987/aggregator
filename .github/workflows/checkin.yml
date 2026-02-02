@@ -23,19 +23,20 @@ jobs:
 
       - name: Run Aggregator
         env:
-          # 使用环境变量传递，这是最稳的方式
+          # 使用 secrets 传递密码
           PAT: ${{ secrets.GIST_PAT }}
-          GID: "d1eae861da1ff1fb632e4fa08e2f06b3"
+          # 核心修正：GID 必须填完整的网址，不能只填 ID！
+          GID: "https://gist.github.com/XPZ19987/d1eae861da1ff1fb632e4fa08e2f06b3"
         run: |
-          # 1. 自检：检查 Token 是否读取成功
+          # 1. 自检
           if [ -z "$PAT" ]; then
-            echo "❌ 错误: GIST_PAT 是空的！请检查 Secrets 设置。"
+            echo "❌ 错误: GIST_PAT 没读到！"
             exit 1
           else
-            echo "✅ 成功: GIST_PAT 已读取 (长度: ${#PAT})"
+            echo "✅ 成功: GIST_PAT 已读取"
           fi
 
-          # 2. 运行脚本 (注意：这里绝对没有 -o 参数)
+          # 2. 运行脚本 (使用完整链接)
           python subscribe/collect.py \
             -t clash \
             -n 300 \
